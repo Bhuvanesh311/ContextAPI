@@ -1,0 +1,7 @@
+from app.core.config import settings
+
+
+MINIO_ENDPOINT = settings.MINIO_ENDPOINT
+MINIO_ACCESS_KEY = settings.MINIO_ACCESS_KEY
+MINIO_SECRET_KEY = settings.MINIO_SECRET_KEY
+MINIO_SECURE = settings.MINIO_SECURE

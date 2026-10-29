@@ -1,0 +1,5 @@
+*.sh text eol=lf
+Dockerfile text eol=lf
+dockerfile text eol=lf
+# Mounted into Linux containers: keep Unix line endings on every checkout.
+backend/app/infra/docker/compose/clamav/clamd.conf text eol=lf

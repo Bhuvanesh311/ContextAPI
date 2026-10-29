@@ -1,0 +1,558 @@
+.register-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 36px clamp(24px, 8vw, 120px);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: #17120f;
+  color: #f8f0e6;
+  font-family: Inter, "Segoe UI", sans-serif;
+}
+
+.register-background {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(ellipse at 18% 25%, #68452c55, transparent 45%),
+    radial-gradient(ellipse at 70% 100%, #8e542d30, transparent 45%),
+    linear-gradient(120deg, #17120f, #302116 55%, #1a120e);
+}
+
+.register-background::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.18;
+  background-image: url("/images/login-background.png");
+  background-size: cover;
+  background-position: center;
+  mix-blend-mode: screen;
+}
+
+.register-card {
+  width: 100%;
+  max-width: 470px;
+  padding: 38px;
+  border: 1px solid #a17b5b4d;
+  border-radius: 22px;
+  background: rgba(31, 24, 19, 0.94);
+  box-shadow: 0 25px 80px #00000070;
+  backdrop-filter: blur(18px);
+}
+
+.register-back {
+  display: inline-block;
+  margin-bottom: 28px;
+  color: #c6aa91;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.register-back:hover,
+.register-footer a:hover {
+  color: #e5a66e;
+}
+
+.register-brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 30px;
+  font-size: 25px;
+  font-weight: 750;
+  letter-spacing: -0.8px;
+}
+
+.register-brand-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 1px solid #d29a6b;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #a66b40, #56351f);
+  color: #fff4e8;
+  font-size: 14px;
+  letter-spacing: 0;
+}
+
+.register-brand-accent {
+  color: #d9a06f;
+}
+
+.register-eyebrow {
+  margin: 0 0 8px;
+  color: #d6a174;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 2.2px;
+}
+
+.register-card h1 {
+  margin: 0;
+  font-size: clamp(27px, 4vw, 34px);
+  line-height: 1.2;
+  letter-spacing: -1px;
+}
+
+.register-description {
+  margin: 11px 0 25px;
+  color: #b8a596;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.register-card form {
+  display: flex;
+  flex-direction: column;
+}
+
+.register-card form > label {
+  margin: 15px 0 8px;
+  color: #e9ddd1;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.register-card form > input {
+  width: 100%;
+  min-height: 47px;
+  box-sizing: border-box;
+  padding: 0 14px;
+  border: 1px solid #69503e;
+  border-radius: 9px;
+  outline: none;
+  background: #211913;
+  color: #fff5eb;
+  font: inherit;
+  font-size: 13px;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.register-card form > input::placeholder {
+  color: #887565;
+}
+
+.register-card form > input:focus {
+  border-color: #c78c5d;
+  box-shadow: 0 0 0 3px #c78c5d20;
+}
+
+.register-show-password {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 15px 0 20px;
+  color: #c5b3a3;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.register-show-password input {
+  accent-color: #b77748;
+}
+
+.register-submit {
+  min-height: 49px;
+  border: 0;
+  border-radius: 9px;
+  background: linear-gradient(110deg, #bd8051, #945a32);
+  color: #fffaf5;
+  font-size: 14px;
+  font-weight: 750;
+  cursor: pointer;
+  transition:
+    transform 0.2s,
+    filter 0.2s;
+}
+
+.register-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.1);
+}
+
+.register-submit:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.register-message {
+  margin: 14px 0;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.register-error {
+  border: 1px solid #a54f46;
+  background: #682d273d;
+  color: #ffc1b8;
+}
+
+.register-success {
+  border: 1px solid #528467;
+  background: #254d363d;
+  color: #b9efcc;
+}
+
+.register-footer {
+  margin: 23px 0 0;
+  color: #b8a596;
+  font-size: 12px;
+  text-align: center;
+}
+
+.register-footer a {
+  color: #e1ad7f;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.register-security {
+  margin: 25px 0 0;
+  padding-top: 17px;
+  border-top: 1px solid #594536;
+  color: #927e6d;
+  font-size: 10px;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .register-page {
+    justify-content: center;
+    padding: 20px 14px;
+  }
+
+  .register-card {
+    max-width: 440px;
+    padding: 26px 21px;
+    border-radius: 17px;
+  }
+
+  .register-back {
+    margin-bottom: 22px;
+  }
+}
+
+@media (max-width: 360px) {
+  .register-card {
+    padding: 22px 16px;
+  }
+}
+
+/* Authentication views inside the existing login card */
+
+.auth-card {
+  transition: height 0.2s ease;
+}
+
+.auth-back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 20px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #c6aa91;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.auth-back-button:hover {
+  color: #e5a66e;
+}
+
+.auth-text-link {
+  display: inline;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #dba477;
+  font: inherit;
+  font-weight: 650;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.auth-text-link:hover {
+  color: #f0c39b;
+  text-decoration: underline;
+}
+
+.create-account {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 22px;
+  color: #b8a596;
+  font-size: 12px;
+}
+
+.auth-message {
+  margin: 14px 0;
+  padding: 12px 13px;
+  border-radius: 9px;
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.auth-success {
+  border: 1px solid #528467;
+  background: #254d363d;
+  color: #b9efcc;
+}
+
+.auth-bottom-note {
+  margin: 23px 0 0;
+  color: #b8a596;
+  font-size: 12px;
+  line-height: 1.7;
+  text-align: center;
+}
+
+.auth-secondary-button {
+  width: 100%;
+  margin-top: 14px;
+  padding: 10px;
+  border: 1px solid #69503e;
+  border-radius: 9px;
+  background: transparent;
+  color: #e1ad7f;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.auth-secondary-button:hover:not(:disabled) {
+  background: #ffffff08;
+}
+
+.auth-secondary-button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+/* Prevent long registration and reset forms from exceeding the screen */
+
+@media (max-height: 850px) {
+  .auth-card {
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #79563d transparent;
+  }
+}
+
+@media (max-width: 600px) {
+  .auth-card {
+    max-height: calc(100dvh - 40px);
+  }
+
+  .auth-back-button {
+    margin-bottom: 16px;
+  }
+}
+
+/* Compact authentication layout — fixed window, no scrollbar */
+
+.login-workspace .login-card.auth-card {
+  height: 720px;
+  max-height: calc(100dvh - 32px);
+  overflow: hidden;
+  padding: 28px 32px;
+}
+
+/* Smaller headings across all authentication views */
+.login-card.auth-card .card-heading {
+  margin-bottom: 18px;
+}
+
+.login-card.auth-card .card-heading h2 {
+  font-size: 27px;
+  line-height: 1.2;
+  margin: 12px 0 6px;
+}
+
+.login-card.auth-card .card-heading p {
+  font-size: 12px;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.login-card.auth-card .admin-badge {
+  font-size: 10px;
+  padding: 6px 9px;
+}
+
+/* Reduce gaps between input fields */
+.login-card.auth-card .field-group {
+  margin-bottom: 13px;
+}
+
+.login-card.auth-card .field-group > label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 11px;
+}
+
+.login-card.auth-card .input-shell {
+  min-height: 43px;
+}
+
+.login-card.auth-card .input-shell input {
+  min-width: 0;
+  font-size: 12px;
+}
+
+/* Compact buttons */
+.login-card.auth-card .sign-in-button {
+  min-height: 44px;
+  padding: 10px 14px;
+  font-size: 13px;
+}
+
+/* Smaller space around secondary links */
+.login-card.auth-card .form-options {
+  margin: 8px 0 16px;
+  font-size: 11px;
+}
+
+.login-card.auth-card .create-account {
+  margin-top: 15px;
+  font-size: 11px;
+}
+
+.login-card.auth-card .security-note {
+  margin-top: 16px;
+}
+
+.login-card.auth-card .login-caption {
+  margin-top: 13px;
+  font-size: 10px;
+}
+
+.login-card.auth-card .auth-bottom-note {
+  margin-top: 15px;
+  font-size: 11px;
+}
+
+.login-card.auth-card .auth-back-button {
+  margin-bottom: 14px;
+  font-size: 11px;
+}
+
+.login-card.auth-card .auth-message,
+.login-card.auth-card .login-error {
+  padding: 9px 10px;
+  margin: 9px 0;
+  font-size: 11px;
+}
+
+/* Compact registration and password reset forms */
+.login-card.auth-card .auth-secondary-button {
+  margin-top: 9px;
+  padding: 8px;
+  font-size: 11px;
+}
+
+/* Keep the same card dimensions in every view */
+.login-card.auth-view-login,
+.login-card.auth-view-register,
+.login-card.auth-view-verify-email,
+.login-card.auth-view-forgot-password,
+.login-card.auth-view-reset-password {
+  height: 720px;
+}
+
+/* Small screens */
+@media (max-width: 600px) {
+  .login-workspace .login-card.auth-card {
+    padding: 24px 20px;
+    max-height: calc(100dvh - 24px);
+  }
+}
+
+/* Short screens: use available height without scrolling */
+@media (max-height: 767px) {
+  .login-workspace .login-card.auth-card {
+    height: calc(100dvh - 24px);
+    max-height: calc(100dvh - 24px);
+  }
+
+  .login-card.auth-view-login,
+  .login-card.auth-view-register,
+  .login-card.auth-view-verify-email,
+  .login-card.auth-view-forgot-password,
+  .login-card.auth-view-reset-password {
+    height: calc(100dvh - 24px);
+  }
+}
+
+/* Improve vertical alignment of Create Account view only */
+.login-card.auth-view-register {
+  padding-top: 18px;
+}
+
+/* Reduce space below the logo and Back to Sign In */
+.login-card.auth-view-register .mobile-brand {
+  margin-bottom: 12px;
+}
+
+.login-card.auth-view-register .auth-back-button {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+/* Move the heading upward and tighten its spacing */
+.login-card.auth-view-register .card-heading {
+  margin-top: 0;
+  margin-bottom: 14px;
+}
+
+.login-card.auth-view-register .card-heading h2 {
+  margin-top: 8px;
+  margin-bottom: 4px;
+  font-size: 25px;
+}
+
+.login-card.auth-view-register .card-heading p {
+  margin: 0;
+  font-size: 12px;
+}
+
+/* Compact registration fields */
+.login-card.auth-view-register .field-group {
+  margin-bottom: 10px;
+}
+
+.login-card.auth-view-register .field-group > label {
+  margin-bottom: 5px;
+}
+
+.login-card.auth-view-register .input-shell {
+  min-height: 42px;
+}
+
+.login-card.auth-view-register .sign-in-button {
+  margin-top: 2px;
+}
+
+/* Keep the existing card size and position */
+.login-card.auth-view-register {
+  height: 720px;
+  max-height: calc(100dvh - 32px);
+}

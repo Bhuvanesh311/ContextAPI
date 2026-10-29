@@ -1,0 +1,39 @@
+FROM python:3.13-slim
+
+WORKDIR /sandbox
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libmagic1 \
+    file \
+    poppler-utils \
+    tesseract-ocr \
+    tesseract-ocr-eng \
+    tesseract-ocr-tam \
+    libreoffice \
+    unzip \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY app/infra/docker/parsing/requirements.txt /tmp/requirements.txt
+
+RUN pip install \
+    --timeout 300 \
+    --retries 10 \
+    --no-cache-dir \
+    -r /tmp/requirements.txt
+
+RUN python -c "import tree_sitter_language_pack; tree_sitter_language_pack.download_all()"
+
+COPY app ./app
+
+COPY app/infra/docker/parsing/entrypoint.sh /usr/local/bin/contextapi-parser-entrypoint.sh
+
+RUN chmod 0755 /usr/local/bin/contextapi-parser-entrypoint.sh
+
+RUN useradd \
+    --create-home \
+    --shell /usr/sbin/nologin \
+    parser
+
+ENTRYPOINT ["/usr/local/bin/contextapi-parser-entrypoint.sh"]

@@ -1,18 +1,23 @@
+
 # Python
 __pycache__/
-*.pyc
+*.py[cod]
 .pytest_cache/
 .venv/
 venv/
+.dev_cache/
+.mypy_cache/
+.ruff_cache/
 
-# Environment variables
+# Environment variables and secrets
 .env
 .env.*
 !.env.example
 
-# Frontend
+# Frontend dependencies and build output
 node_modules/
 dist/
+dist-ssr/
 build/
 .next/
 
@@ -22,3 +27,7 @@ build/
 
 # Logs
 *.log
+
+# OS files
+.DS_Store
+Thumbs.db

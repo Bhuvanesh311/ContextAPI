@@ -1,0 +1,217 @@
+# ContextAPI application services (API + Celery workers), built from backend/Dockerfile.
+# Start the infrastructure first (docker-compose.yml), then, from this folder:
+#
+#   docker compose -p contextapi-app -f docker-compose.app.yml --env-file ../../../.env up -d --build
+#
+# Hosts and ports below point at the infrastructure containers on
+# contextapi-network and override the localhost values in backend/.env.
+# Credentials come from backend/.env (passed with --env-file); nothing is
+# baked into the image.
+
+x-backend: &backend
+  build:
+    context: ../../..
+  image: contextapi/backend:latest
+  env_file: ../../../.env
+  environment:
+    DATABASE_URL: postgresql+psycopg://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@contextapi-postgres:5432/${POSTGRES_DATABASE}
+    POSTGRES_HOST: contextapi-postgres
+    POSTGRES_PORT: "5432"
+    REDIS_HOST: contextapi-redis
+    REDIS_PORT: "6379"
+    REDIS_URL: redis://contextapi-redis:6379/0
+    RABBITMQ_HOST: contextapi-rabbitmq
+    RABBITMQ_PORT: "5672"
+    RABBITMQ_URL: amqp://${RABBITMQ_USERNAME}:${RABBITMQ_PASSWORD}@contextapi-rabbitmq:5672/
+    CELERY_BROKER_URL: amqp://${RABBITMQ_USERNAME}:${RABBITMQ_PASSWORD}@contextapi-rabbitmq:5672/
+    CELERY_RESULT_BACKEND: redis://contextapi-redis:6379/1
+    MINIO_ENDPOINT: contextapi-minio:9000
+    CHROMADB_HOST: contextapi-chromadb
+    CHROMADB_PORT: "8000"
+    CLAMAV_HOST: contextapi-clamav
+    CLAMAV_PORT: "3310"
+    # Ollama runs on the host (GPU / model files stay outside the container).
+    OLLAMA_BASE_URL: http://host.docker.internal:11434
+    POST_SECURITY_AI_BASE_URL: http://host.docker.internal:11434
+    HF_HUB_OFFLINE: "1"
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
+  volumes:
+    - hf-models:/models/huggingface
+  networks:
+    - contextapi-network
+  restart: unless-stopped
+
+services:
+  migrate:
+    <<: *backend
+    command: ["python", "-m", "alembic", "upgrade", "head"]
+    restart: "no"
+
+  # Makes sure the embedding and reranker models are in the shared volume;
+  # workers then run fully offline (HF_HUB_OFFLINE=1). Models already in the
+  # volume (e.g. copied from another machine for an air-gapped install) are
+  # used as they are; only missing ones are downloaded.
+  model-init:
+    <<: *backend
+    environment:
+      HF_HUB_OFFLINE: "0"
+    command:
+      - python
+      - -c
+      - |
+        from huggingface_hub import snapshot_download as d
+        for m in ("BAAI/bge-m3", "BAAI/bge-reranker-base"):
+            try:
+                d(m, local_files_only=True)
+                print("cached:", m)
+            except Exception:
+                print("downloading:", m)
+                d(m)
+    restart: "no"
+
+  # The shared parser-sandbox directory is created by Docker as root; hand it
+  # to the image's app user (uid 10001) so worker-default can write to it.
+  # Kept running (not a one-shot) because a Docker Desktop restart wipes the
+  # VM's /tmp and recreates the folder as root; the restart policy re-runs
+  # the chown every time the daemon comes back.
+  sandbox-init:
+    <<: *backend
+    user: "0"
+    command:
+      - sh
+      - -c
+      - chown -R 10001:10001 /tmp/contextapi/parser-sandbox && exec sleep infinity
+    volumes:
+      - /tmp/contextapi/parser-sandbox:/tmp/contextapi/parser-sandbox
+    restart: unless-stopped
+
+  api:
+    <<: *backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  # Emails (OTP, login) and ingestion. Kept apart from retrieval so a long
+  # retrieval never delays them.
+  worker-default:
+    <<: *backend
+    command:
+      - celery
+      - -A
+      - app.infra.celery.app.celery_app
+      - worker
+      - --loglevel=info
+      - -n
+      - default@%h
+      - -Q
+      - celery,email
+      - --concurrency=4
+    # Ingestion starts the parser sandbox through the Docker API.
+    # Set DOCKER_GID to the host's docker group id (getent group docker);
+    # on Docker Desktop (Windows/macOS) the socket belongs to gid 0.
+    group_add:
+      - "${DOCKER_GID:-999}"
+    volumes:
+      - hf-models:/models/huggingface
+      - /var/run/docker.sock:/var/run/docker.sock
+      # The sandbox containers bind-mount their workspace from the Docker
+      # host, so the worker must see the same directory at the same path.
+      - /tmp/contextapi/parser-sandbox:/tmp/contextapi/parser-sandbox
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      sandbox-init:
+        condition: service_started
+
+  # Retrieval: threads pool, so one copy of the models (several GB) is shared
+  # by all concurrent requests instead of one copy per prefork child.
+  worker-retrieval:
+    <<: *backend
+    command:
+      - celery
+      - -A
+      - app.infra.celery.app.celery_app
+      - worker
+      - --loglevel=info
+      - -n
+      - retrieval@%h
+      - -Q
+      - retrieval
+      - --pool=threads
+      - --concurrency=4
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      model-init:
+        condition: service_completed_successfully
+
+  # Chunking + embedding (BGE-M3 on CPU). One job at a time with a capped
+  # number of torch threads, so a large upload never starves retrieval.
+  worker-processing:
+    <<: *backend
+    command:
+      - celery
+      - -A
+      - app.infra.celery.app.celery_app
+      - worker
+      - --loglevel=info
+      - -n
+      - processing@%h
+      - -Q
+      - processing
+      - --pool=threads
+      - --concurrency=1
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@contextapi-postgres:5432/${POSTGRES_DATABASE}
+      POSTGRES_HOST: contextapi-postgres
+      POSTGRES_PORT: "5432"
+      REDIS_HOST: contextapi-redis
+      REDIS_PORT: "6379"
+      REDIS_URL: redis://contextapi-redis:6379/0
+      RABBITMQ_HOST: contextapi-rabbitmq
+      RABBITMQ_PORT: "5672"
+      RABBITMQ_URL: amqp://${RABBITMQ_USERNAME}:${RABBITMQ_PASSWORD}@contextapi-rabbitmq:5672/
+      CELERY_BROKER_URL: amqp://${RABBITMQ_USERNAME}:${RABBITMQ_PASSWORD}@contextapi-rabbitmq:5672/
+      CELERY_RESULT_BACKEND: redis://contextapi-redis:6379/1
+      MINIO_ENDPOINT: contextapi-minio:9000
+      CHROMADB_HOST: contextapi-chromadb
+      CHROMADB_PORT: "8000"
+      CLAMAV_HOST: contextapi-clamav
+      CLAMAV_PORT: "3310"
+      OLLAMA_BASE_URL: http://host.docker.internal:11434
+      POST_SECURITY_AI_BASE_URL: http://host.docker.internal:11434
+      HF_HUB_OFFLINE: "1"
+      # Leave CPU for retrieval and the parser sandboxes.
+      OMP_NUM_THREADS: "${PROCESSING_CPU_THREADS:-4}"
+      MKL_NUM_THREADS: "${PROCESSING_CPU_THREADS:-4}"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      model-init:
+        condition: service_completed_successfully
+
+  # Scheduled jobs (e.g. failing retrieval requests stuck in PENDING/RUNNING).
+  # Run exactly one beat instance.
+  beat:
+    <<: *backend
+    command:
+      - celery
+      - -A
+      - app.infra.celery.app.celery_app
+      - beat
+      - --loglevel=info
+      - -s
+      - /tmp/celerybeat-schedule
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+volumes:
+  hf-models:
+
+networks:
+  contextapi-network:
+    external: true

@@ -1,0 +1,28 @@
+services:
+  neo4j:
+    image: neo4j:2026.07.1
+    container_name: contextapi-neo4j
+
+    restart: unless-stopped
+
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+
+    environment:
+      NEO4J_AUTH: "${NEO4J_USERNAME:-neo4j}/${NEO4J_PASSWORD}"
+
+    volumes:
+      - neo4j-data:/data
+      - neo4j-logs:/logs
+
+    networks:
+      - contextapi-network
+
+volumes:
+  neo4j-data:
+  neo4j-logs:
+
+networks:
+  contextapi-network:
+    external: true

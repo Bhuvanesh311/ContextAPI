@@ -1,0 +1,22 @@
+
+services:
+  clamav:
+        image: clamav/clamav:stable
+        container_name: contextapi-clamav
+
+        ports:
+            - "3310:3310"
+
+        volumes:
+            # Size limits for 500 MB uploads; see the file for details.
+            - ./clamav/clamd.conf:/etc/clamav/clamd.conf:ro
+        
+        networks:
+            - contextapi-network
+
+        restart: unless-stopped
+
+
+networks:
+  contextapi-network:
+    external: true

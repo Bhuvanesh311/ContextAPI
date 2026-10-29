@@ -1,0 +1,15 @@
+# Secrets must never be baked into the image; pass them at runtime.
+.env
+.env.*
+**/.env
+!**/.env.example
+
+.venv/
+venv/
+**/__pycache__/
+**/*.pyc
+.pytest_cache/
+.dev_cache/
+.git/
+tests/
+*.zip

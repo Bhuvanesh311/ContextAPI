@@ -1,0 +1,28 @@
+
+services:
+  rabbitmq:
+    image: rabbitmq:3.13.7-management
+    container_name: contextapi-rabbitmq
+
+    restart: unless-stopped
+
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+
+    networks:
+      - contextapi-network
+
+volumes:
+  rabbitmq-data:
+
+networks:
+  contextapi-network:
+    external: true

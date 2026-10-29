@@ -1,0 +1,226 @@
+.infer-global-header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: var(--infer-sidebar-width, 252px);
+  z-index: 80;
+  height: 78px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 0 26px;
+  border-bottom: 1px solid var(--header-border, rgba(128, 83, 48, 0.12));
+  background: var(--header-glass, rgba(250, 234, 216, 0.74));
+  color: var(--header-text, #352014);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+}
+
+.global-search {
+  width: min(590px, 60%);
+  height: 46px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 0 13px;
+  border: 1px solid var(--header-border, rgba(128, 83, 48, 0.18));
+  border-radius: 13px;
+  background: var(--search-glass, rgba(255, 250, 244, 0.84));
+  color: var(--header-muted, #80634e);
+}
+
+.global-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--header-text, #352014);
+  font: inherit;
+  font-size: 13px;
+}
+
+.global-search kbd {
+  padding: 4px 7px;
+  border: 1px solid var(--header-border, #e2cbb6);
+  border-radius: 6px;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.global-header-actions {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.global-icon-button {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  position: relative;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.global-icon-button:hover {
+  border-color: var(--header-border, #e2cbb6);
+  background: var(--search-glass, rgba(255, 250, 244, 0.84));
+}
+
+.notification-dot {
+  position: absolute;
+  top: 7px;
+  right: 8px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ed8b37;
+}
+
+.global-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 0 4px 5px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.global-profile:hover {
+  background: var(--search-glass, rgba(255, 250, 244, 0.5));
+}
+
+.global-avatar {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #ffffff85;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #fff8ed, #d6b99d);
+  color: #5d351c;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.global-profile-copy {
+  min-width: 70px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.global-profile-copy strong {
+  max-width: 140px;
+  overflow: hidden;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.global-profile-copy small {
+  color: var(--header-muted, #80634e);
+  font-size: 11px;
+}
+
+.global-profile-menu {
+  position: absolute;
+  top: 54px;
+  right: 0;
+  z-index: 120;
+  width: 225px;
+  padding: 8px;
+  border: 1px solid var(--header-border, #e2cbb6);
+  border-radius: 13px;
+  background: var(--search-glass, #fffaf4);
+  color: var(--header-text, #352014);
+  box-shadow: 0 14px 40px #26170f25;
+}
+
+.profile-menu-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 10px;
+  overflow: hidden;
+}
+
+.profile-menu-heading strong {
+  font-size: 13px;
+}
+
+.profile-menu-heading small {
+  overflow: hidden;
+  color: var(--header-muted, #80634e);
+  font-size: 11px;
+  text-overflow: ellipsis;
+}
+
+.global-profile-menu button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.global-profile-menu button:hover {
+  background: var(--header-border, #f0e0d0);
+}
+
+:root[data-inferai-theme="dark"] {
+  --header-text: #fff0df;
+  --header-muted: #d0b7a2;
+  --header-border: rgba(255, 211, 174, 0.15);
+  --header-glass: rgba(28, 17, 12, 0.82);
+  --search-glass: rgba(39, 25, 18, 0.91);
+}
+
+@media (max-width: 760px) {
+  .infer-global-header {
+    left: 76px;
+    height: 68px;
+    padding: 0 10px;
+    gap: 6px;
+  }
+
+  .global-search {
+    width: auto;
+    flex: 1;
+    gap: 7px;
+    padding: 0 8px;
+  }
+
+  .global-search kbd,
+  .notification-button,
+  .global-profile-copy,
+  .global-profile > svg {
+    display: none;
+  }
+
+  .global-header-actions {
+    gap: 2px;
+  }
+
+  .global-profile {
+    padding: 0;
+  }
+}

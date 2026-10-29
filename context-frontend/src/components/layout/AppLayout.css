@@ -1,0 +1,47 @@
+.infer-app-shell {
+  min-height: 100vh;
+}
+
+/* Main content — expanded sidebar */
+.infer-app-content {
+  min-height: 100vh;
+  margin-left: 252px;
+  padding-top: 78px;
+  transition: margin-left 0.22s ease;
+}
+
+.infer-app-content > * {
+  min-width: 0;
+}
+
+/* Main content — collapsed sidebar */
+.infer-app-shell.sidebar-collapsed .infer-app-content {
+  margin-left: 82px;
+}
+
+/* Header positioning */
+.infer-app-shell .infer-header {
+  left: 252px;
+  transition: left 0.22s ease;
+}
+
+.infer-app-shell.sidebar-collapsed .infer-header {
+  left: 82px;
+}
+
+/* Mobile layout */
+@media (max-width: 760px) {
+  .infer-app-content {
+    margin-left: 76px;
+    padding-top: 68px;
+  }
+
+  .infer-app-shell.sidebar-collapsed .infer-app-content {
+    margin-left: 76px;
+  }
+
+  .infer-app-shell .infer-header,
+  .infer-app-shell.sidebar-collapsed .infer-header {
+    left: 76px;
+  }
+}

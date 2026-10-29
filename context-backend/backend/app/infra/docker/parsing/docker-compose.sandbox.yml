@@ -1,0 +1,19 @@
+services:
+  parser-sandbox:
+    image: contextapi/parser-sandbox:latest
+
+    build:
+      context: ../../../../
+      dockerfile: app/infra/docker/parsing/dockerfile
+
+    container_name: contextapi-parser-sandbox
+    tty: true
+    stdin_open: true
+    restart: "no"
+
+    networks:
+      - contextapi-network
+
+networks:
+  contextapi-network:
+    external: true

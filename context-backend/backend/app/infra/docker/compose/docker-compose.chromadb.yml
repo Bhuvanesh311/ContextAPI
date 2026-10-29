@@ -1,0 +1,27 @@
+
+services:
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: contextapi-chromadb
+
+    restart: unless-stopped
+
+    ports:
+      - "8001:8000"
+
+    environment:
+      IS_PERSISTENT: "TRUE"
+      PERSIST_DIRECTORY: "/chroma/chroma"
+
+    volumes:
+      - chromadb-data:/chroma/chroma
+    
+    networks:
+      - contextapi-network
+
+volumes:
+  chromadb-data:
+
+networks:
+  contextapi-network:
+    external: true

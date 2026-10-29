@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ContextAPI{% endblock %}</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f4f7fb;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #333333;
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        }
+
+        .header {
+            background: #2563eb;
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            opacity: .9;
+            font-size: 14px;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .content h2 {
+            margin-bottom: 20px;
+            color: #1f2937;
+        }
+
+        .content p {
+            margin-bottom: 16px;
+        }
+
+        .otp-box {
+            margin: 30px auto;
+            width: fit-content;
+            background: #eef4ff;
+            border: 2px dashed #2563eb;
+            color: #2563eb;
+            padding: 18px 40px;
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: 8px;
+            border-radius: 10px;
+        }
+
+        .info-box {
+            margin-top: 25px;
+            padding: 18px;
+            border-left: 4px solid #2563eb;
+            background: #f8fbff;
+            font-size: 14px;
+        }
+
+        .button {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 14px 28px;
+            background: #2563eb;
+            color: #ffffff !important;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .footer {
+            padding: 24px;
+            text-align: center;
+            background: #f9fafb;
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .footer a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        @media screen and (max-width: 600px) {
+
+            body {
+                padding: 20px 10px;
+            }
+
+            .content {
+                padding: 24px;
+            }
+
+            .otp-box {
+                font-size: 26px;
+                letter-spacing: 5px;
+                padding: 16px 24px;
+            }
+
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>ContextAPI</h1>
+        <p>AI-Powered API reverse engineering platform</p>
+    </div>
+
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <div class="footer">
+        <p>
+            © {{ current_year }} ContextAPI. All rights reserved.
+        </p>
+
+        <br>
+
+        <p>
+            This is an automated email.
+            Please do not reply to this message.
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+</html>

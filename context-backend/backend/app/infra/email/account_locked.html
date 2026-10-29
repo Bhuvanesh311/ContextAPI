@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Account Temporarily Locked{% endblock %}
+
+{% block content %}
+
+<h2>Hello {{ username }},</h2>
+
+<p>
+Your ContextAPI account has been temporarily locked due to multiple unsuccessful login attempts.
+</p>
+
+<p>
+This security measure helps protect your account from unauthorized access.
+</p>
+
+<div class="info-box">
+    <strong>What happens next?</strong><br>
+    • Please wait until the lock period expires before attempting to log in again.<br>
+    • If these attempts were not made by you, we recommend changing your password once access is restored.
+</div>
+
+{% endblock %}

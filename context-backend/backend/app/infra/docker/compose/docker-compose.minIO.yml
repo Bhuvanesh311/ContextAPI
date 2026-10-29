@@ -1,0 +1,28 @@
+
+services:
+  minio:
+    image: quay.io/minio/minio:latest
+    container_name: contextapi-minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER:  ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio-data:/data
+    
+    networks:
+      - contextapi-network
+
+
+volumes:
+  minio-data:
+
+
+networks:
+  contextapi-network:
+    external: true
+  

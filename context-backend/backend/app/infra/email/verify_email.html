@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Verify Your Email{% endblock %}
+
+{% block content %}
+
+<h2>Hello {{ username }},</h2>
+
+<p>
+Welcome to <strong>ContextAPI</strong>! Thank you for creating your account.
+</p>
+
+<p>
+To verify your email address, please enter the following verification code:
+</p>
+
+<div class="otp-box">
+    {{ otp }}
+</div>
+
+<div class="info-box">
+    <strong>Important:</strong><br>
+    • This verification code expires in <strong>5 minutes</strong>.<br>
+    • Never share this code with anyone.<br>
+    • If you didn't create this account, you can safely ignore this email.
+</div>
+
+{% endblock %}

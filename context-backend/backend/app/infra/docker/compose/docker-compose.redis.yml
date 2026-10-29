@@ -1,0 +1,24 @@
+
+services:
+  redis:
+    image: redis:8-alpine
+    container_name: contextapi-redis
+
+    restart: unless-stopped
+
+    ports:
+      - "6380:6379"
+
+    volumes:
+      - redis-data:/data
+    
+    networks:
+      - contextapi-network
+
+volumes:
+  redis-data:
+
+
+networks:
+  contextapi-network:
+    external: true
